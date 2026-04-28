@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "mocha -w",
+    "test:smoke": "mocha tests/smoke/apps-open.smoke.test.js",
+    "test:features": "mocha tests/features/**/*.test.js",
+    "e2e:pwrtrx": "cross-env DOTENV_CONFIG_PATH=.env.pwrtrx DOTENV_CONFIG_OVERRIDE=false mocha --require dotenv/config --no-config --no-package --reporter spec tests/e2e/pwrtrx.e2e.test.js",
+    "e2e:neris:ci": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false FIR_RUN_BATCH=false BATCH_COUNT=1 HEADLESS=true mocha --require dotenv/config --no-config --no-package --reporter spec tests/e2e/neris.e2e.test.js",
+    "e2e:neris:batch": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false FIR_RUN_BATCH=true BATCH_COUNT=5 BATCH_DELAY_MS=250 HEADLESS=true mocha --require dotenv/config --no-config --no-package --reporter spec tests/e2e/neris.e2e.test.js --grep \"creates BATCH_COUNT FIR records\"",
+    "e2e:neris:headed": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false HEADLESS=false mocha --require dotenv/config --no-config --no-package tests/e2e/neris.e2e.test.js",
+    "e2e:neris:headless": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false HEADLESS=true mocha --require dotenv/config --no-config --no-package tests/e2e/neris.e2e.test.js",
+    "e2e:neris:diag": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false DEBUG_PICKERS=true PICKERS_RETRY=2 PICKERS_WAIT_MS=8000 PICKERS_DIAG_DIR=./artifacts/pickers HEADLESS=false mocha --require dotenv/config --no-config --no-package tests/e2e/neris.e2e.test.js",
+    "e2e:neris:grep": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false mocha --require dotenv/config --no-config --no-package tests/e2e/neris.e2e.test.js --grep",
+    "smoke:int": "cross-env DOTENV_CONFIG_PATH=.env.trashpanda DOTENV_CONFIG_OVERRIDE=false mocha --require dotenv/config --no-config --no-package tests/smoke/apps-open.smoke.test.js",
+    "smoke:int:headless": "cross-env DOTENV_CONFIG_PATH=.env.trashpanda DOTENV_CONFIG_OVERRIDE=false HEADLESS=true mocha --require dotenv/config --no-config --no-package --reporter spec tests/smoke/apps-open.smoke.test.js",
+    "smoke:int:ci": "cross-env DOTENV_CONFIG_PATH=.env.trashpanda DOTENV_CONFIG_OVERRIDE=false HEADLESS=true mocha --require dotenv/config --no-config --no-package --reporter spec tests/smoke/apps-open.smoke.test.js",
+    "smoke:rms": "cross-env DOTENV_CONFIG_PATH=.env.trashpanda DOTENV_CONFIG_OVERRIDE=false mocha --require dotenv/config --no-config --no-package tests/smoke/rms-opne.smoke.test.js",
+    "env:print:cr": "cross-env DOTENV_CONFIG_PATH=.env.cr.neris DOTENV_CONFIG_OVERRIDE=false node -r dotenv/config scripts/print-env.js"
+  },
+  "devDependencies": {
+    "chai": "^6.2.0",
+    "cross-env": "^10.1.0",
+    "mocha": "^11.7.5"
+  }
+}
