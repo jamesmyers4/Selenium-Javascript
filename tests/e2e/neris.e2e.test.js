@@ -1,4 +1,3 @@
-// tests/e2e/neris.e2e.test.js
 import { expect } from 'chai';
 import createDriver from '../../utils/driver.js';
 import { login } from '../../utils/auth.js';
@@ -22,7 +21,6 @@ const FIELD_LABELS = {
 };
 const FIR = {
   createButton: 'Create',
-  //saveButton: 'Save',
   rootHook: '#neris-root, [data-test="neris-root"]',
 };
 const DATE_CSS = process.env.FIR_DATE_SELECTOR || null;
@@ -30,7 +28,7 @@ const TIME_CSS = process.env.FIR_TIME_SELECTOR || null;
 
 
 async function optimisticToggleOfficer(driver, desired=true, timeout=8000){
-  const res = await waitForOfficerEnabledObs(driver, 1_000); // quick early check
+  const res = await waitForOfficerEnabledObs(driver, 1_000);
   if (res.ok) {
     await setCheckboxSmart(driver, { labels:[
       'Member making report same as Officer in Charge',
@@ -182,7 +180,6 @@ async function submitAndResolveValidation(
     const url = await driver.getCurrentUrl();
     if (successUrlRegex.test(url)) return { ok: true };
 
-    // gather errors
     const errs = await driver.findElements(By.css('.mat-mdc-form-field-error, .mat-error, [role="alert"].mat-mdc-form-field-error'));
     let messages = [];
     for (const e of errs) {
@@ -192,17 +189,7 @@ async function submitAndResolveValidation(
         if (t) messages.push(t);
       } catch {}
     }
-    //const invalids = await driver.findElements(By.css('[aria-invalid="true"]'));
-    //for (const inv of invalids) {
-    //  try {
-    //   if (!(await inv.isDisplayed())) continue;
-    //    const placeholder = await inv.getAttribute('placeholder');
-    //    const name = await inv.getAttribute('name');
-    //    const aria = await inv.getAttribute('aria-label');
-    //    const id = await inv.getAttribute('id');
-    //    messages.push(`Invalid: ${aria || placeholder || name || id || '(unknown field)'}`);
-    //  } catch {}
-    //}
+
     messages = Array.from(new Set(messages)).filter(Boolean);
 
     if (messages.length) {
@@ -235,8 +222,6 @@ function nowParts() {
   const ss = String(d.getSeconds()).padStart(2, '0');
   return { mm, dd, yyyy, hh, mi, ss };
 }
-
-/* ------------------------------ nav helpers ------------------------------ */
 
 function deriveRootFromEnv() {
   const base = process.env.ESAMS_MAIN_URL || process.env.BASE_URL || '';
@@ -327,8 +312,6 @@ async function clickSave(driver, text = process.env.FIR_SAVE_BTN || 'Save') {
   await waitForNoAlerts(driver);
   await waitForNoOverlays(driver);
 }
-
-/* ------------------------------ readers/sections ------------------------------ */
 
 async function readIncidentDetails(driver) {
   async function getVal(lbl) {
@@ -427,7 +410,6 @@ async function fillMedicalModule(driver, med = {}) {
   await clickSave(driver);
 }
 
-// Wait for Angular Material select panel/backdrop to go away (cheap & targeted)
 async function waitForMatSelectToClose(driver, ms = 2500) {
   const sel = '.cdk-overlay-backdrop, .cdk-overlay-pane .mat-mdc-select-panel';
   try {
@@ -439,7 +421,6 @@ async function waitForMatSelectToClose(driver, ms = 2500) {
   } catch {}
 }
 
-// Wait for the officer checkbox to be present & enabled (instead of waiting for “global settle”)
 async function waitForOfficerCheckboxReady(driver, ms = 6000) {
   const labels = [
     'Member making report same as Officer in Charge',
@@ -456,9 +437,6 @@ async function waitForOfficerCheckboxReady(driver, ms = 6000) {
   try { await driver.wait(until.elementIsEnabled(el), ms); } catch {}
   return el;
 }
-
-
-/* ------------------------------ create flow ------------------------------ */
 
 async function createRecordFlow(driver, opts = {}) {
   const deptName = process.env.FIR_FIRE_DEPT_NAME || 'MAIN / FD24027214';
@@ -508,8 +486,6 @@ async function createRecordFlow(driver, opts = {}) {
   const details = await readIncidentDetails(driver);
   return details;
 }
-
-/* --------------------------------- TESTS --------------------------------- */
 
 describe('E2E: FIR (.env.cr.neris)', function () {
   this.timeout(120_000);
@@ -605,7 +581,6 @@ describe('E2E: FIR (.env.cr.neris)', function () {
         await clickSave(driver);
       }
 
-      // Advance to next create
       let advanced = false;
       try { await closeOverlays(driver); await clickByText(driver, 'Create Another'); advanced = true; } catch {}
       if (!advanced) {
@@ -617,7 +592,6 @@ describe('E2E: FIR (.env.cr.neris)', function () {
     }
   });
 
-  // Optional manual fixture (enable with FIR_SMOKE_FIXTURE=true)
   const runManualFixture = String(process.env.FIR_SMOKE_FIXTURE || '').toLowerCase() === 'true';
   (runManualFixture ? it : it.skip)('fills required sections for Utility Infrastructure Fire and saves', async () => {
     await waitForNoOverlays(driver);
