@@ -1,4 +1,3 @@
-// tests/e2e/pwrtrx.e2e.test.js
 import { expect } from 'chai';
 import createDriver from '../../utils/driver.js';
 import fs from 'fs';
@@ -254,7 +253,7 @@ async function findElByCssOrLabels(driver, css, labels, root = null) {
             if (txt.includes(target)) {
               return cand;
             }
-          } catch (e) { /* ignore per-candidate errors */ }
+          } catch (e) {  }
         }
       }
       return null;
@@ -278,7 +277,7 @@ async function setValueAndVerify(driver, { css = null, labels = null, value, roo
   try { await driver.wait(until.elementIsVisible(el), 2000); } catch {}
   try { await driver.wait(until.elementIsEnabled(el), 2000); } catch {}
 
-  try { await el.clear(); } catch (e) { /* ignore clear failure */ }
+  try { await el.clear(); } catch (e) {  }
 
   let typed = false;
   try {
@@ -366,7 +365,6 @@ async function closeDatepickers(driver) {
 }
 
 
-//MOVE to datetime.js (future)
 function nowParts() {
   const d = new Date();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -376,8 +374,6 @@ function nowParts() {
   const mi = String(d.getMinutes()).padStart(2, "0");
   return { mm, dd, yyyy, hh, mi };
 }
-
-/* --------------------------------- TESTS --------------------------------- */
 
 describe("E2E: PowerTRX Reliability (.env.pwrtrx)", function () {
   this.timeout(120_000);
@@ -424,7 +420,6 @@ describe("E2E: PowerTRX Reliability (.env.pwrtrx)", function () {
   });
 
 it("Populates Date, Time, then Address (modal-scoped) — safe against datepicker overlays", async () => {
-  // compute values
   const { mm, dd, yyyy, hh, mi } = nowParts();
   const dateStr = `${mm}/${dd}/${yyyy}`;
   const timeStr = `${hh}:${mi}`;

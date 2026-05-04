@@ -105,10 +105,6 @@ async function waitForOfficerEnabledObs(driver, timeout=8000){
   }, labelTexts, timeout);
 }
 
-
-
-/* --------------------------- helpers: inputs/validation --------------------------- */
-
 async function findElByCssOrLabels(driver, css, labels) {
   if (css) {
     const el = await driver.findElement(By.css(css));

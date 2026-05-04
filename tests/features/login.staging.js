@@ -1,6 +1,3 @@
-// Login to Staging
-//WORKING!!!
-
 const createDriver = require('../../utils/driver');
 const loginAndSelectProfile = require('../../utils/loginHelper.staging');
 const { By, until } = require('selenium-webdriver');
@@ -9,13 +6,11 @@ const { By, until } = require('selenium-webdriver');
   const driver = createDriver();
 
   try {
-    const username = '555544';  // Replace with username
-    const password = 'f';  // Replace with password
+    const username = '555544';
+    const password = 'f';
 
     await loginAndSelectProfile(driver, username, password);
 
-    // Confirm login was successful — check for dashboard element or title
-    //await driver.wait(until.elementLocated(By.id('dashboard')), 10000);
     console.log("✅ Login and profile selection successful.");
 
   } catch (err) {

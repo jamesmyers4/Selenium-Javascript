@@ -3,7 +3,7 @@ function makeIncident(overrides = {}) {
   return {
     title: `[E2E] Incident ${ts}`,
     description: 'Automatically created by E2E test.',
-    severity: 'Medium', // or whatever values your select expects
+    severity: 'Medium',
     ...overrides,
   };
 }

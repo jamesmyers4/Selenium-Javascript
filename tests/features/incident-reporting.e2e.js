@@ -26,11 +26,10 @@ describe('Incident Reporting – E2E', () => {
     await page.advanceStatus('Close');
     await expectStatusEventually(driver, page, 'Closed');
 
-    // Cross-check in Reports (adjust names/filters/selectors in shared/reporting.js)
     await assertReportCount(driver, {
       report: 'INCIDENTS',
       filters: { Severity: data.severity, Status: 'Closed', DateRange: 'Today' },
-      expected: c => c >= 1, // tolerant if non-empty prod data exists
+      expected: c => c >= 1,
     });
   }, 60000);
 });

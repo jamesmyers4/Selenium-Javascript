@@ -17,8 +17,7 @@ class IncidentReportingPage {
     await this.type('[name="Title"]', data.title);
     await this.type('[name="Description"]', data.description);
     await this.select('[name="Severity"]', data.severity);
-    // Add other required fields here
-
+    
     await this.driver.findElement(By.css('[data-test="save"]')).click();
   }
 
@@ -32,7 +31,6 @@ class IncidentReportingPage {
     await this.driver.findElement(By.xpath(`//button[normalize-space()="${nextActionLabel}"]`)).click();
   }
 
-  // Small helpers
   async type(sel, val) {
     const el = await this.driver.findElement(By.css(sel));
     await el.clear(); await el.sendKeys(val);
