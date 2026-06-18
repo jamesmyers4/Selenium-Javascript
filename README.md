@@ -43,44 +43,46 @@ The **application smoke tests** open all 30+ application modules in sequence and
 
 ## Repo structure
 
+```
 tests/
-e2e/
-neris.e2e.test.js Fire incident reporting E2E (single-record and batch modes)
-pwrtrx.e2e.test.js Power outage module E2E
-smoke/
-apps-open.smoke.test.js Opens all 30+ application modules in sequence
-rms-open.smoke.test.js Report smoke (WIP)
-features/
-incident-reporting.e2e.js Incident reporting state-transition tests
-incident-reporting.page.js Page Object for the incident reporting module
-incident-reporting.fixtures.js Fixture data
+  e2e/
+    neris.e2e.test.js          Fire incident reporting E2E (single-record and batch modes)
+    pwrtrx.e2e.test.js         Power outage module E2E
+  smoke/
+    apps-open.smoke.test.js    Opens all 30+ application modules in sequence
+    rms-open.smoke.test.js     Report smoke (WIP)
+  features/
+    incident-reporting.e2e.js       Incident reporting state-transition tests
+    incident-reporting.page.js      Page Object for the incident reporting module
+    incident-reporting.fixtures.js  Fixture data
 
 utils/
-driver.js Selenium WebDriver factory (Chrome, headless toggle)
-auth.js Login flow with OIDC redirect handling
-nav.js goHome(), openApp(), clickLogout()
-forms.js findField(), typeInto(), selectOption(), setCheckbox()
-ui.js closeOverlays(), waitForNoOverlays(), isFieldPopulated()
-alerts.js dismissAnyJsAlert(), withAlertGuard(), drainAllAlerts()
-pickers.js Material Design component library (CDK overlays, datepickers, modals)
-waits.js findByAny(), waitForLoaded(), safeScreenshot()
-stability.js Network + DOM stability probes, waitForCalm(), settle()
-required.js collectTabProblems(), smartFillControl(), resolveAllTopTabs()
-topTabsRequired.js clickLeftSection(), clickTopTab(), satisfyCoreTopTabs()
-diagnostics.js ensureDir(), saveScreenshot(), writeText()
-assertions.js Chai assertion helpers
-datetime.js Date/time formatting helpers
-reporting.js Report verification helpers
-config.neris.js FIR environment config loader (frozen config object)
-config.pwrtrx.js PowerTRX environment config loader
-loginHelper.staging.js Staging environment login
-loginHelper.trashpanda.js Integration environment login
+  driver.js               Selenium WebDriver factory (Chrome, headless toggle)
+  auth.js                 Login flow with OIDC redirect handling
+  nav.js                  goHome(), openApp(), clickLogout()
+  forms.js                findField(), typeInto(), selectOption(), setCheckbox()
+  ui.js                   closeOverlays(), waitForNoOverlays(), isFieldPopulated()
+  alerts.js               dismissAnyJsAlert(), withAlertGuard(), drainAllAlerts()
+  pickers.js              Material Design component library (CDK overlays, datepickers, modals)
+  waits.js                findByAny(), waitForLoaded(), safeScreenshot()
+  stability.js            Network + DOM stability probes, waitForCalm(), settle()
+  required.js             collectTabProblems(), smartFillControl(), resolveAllTopTabs()
+  topTabsRequired.js      clickLeftSection(), clickTopTab(), satisfyCoreTopTabs()
+  diagnostics.js          ensureDir(), saveScreenshot(), writeText()
+  assertions.js           Chai assertion helpers
+  datetime.js             Date/time formatting helpers
+  reporting.js            Report verification helpers
+  config.neris.js         FIR environment config loader (frozen config object)
+  config.pwrtrx.js        PowerTRX environment config loader
+  loginHelper.staging.js      Staging environment login
+  loginHelper.trashpanda.js   Integration environment login
 
 scripts/
-print-env.js Prints resolved environment variables for debugging
+  print-env.js            Prints resolved environment variables for debugging
 
-.mocharc.json Timeout 60s, retries 1, spec reporter
-package.json npm scripts per environment target
+.mocharc.json             Timeout 60s, retries 1, spec reporter
+package.json              npm scripts per environment target
+```
 
 ## Running this
 
