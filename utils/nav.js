@@ -9,14 +9,14 @@ const MAX_OPEN_MENU_RETRIES    = 3;
 
 export async function goHome(driver) {
   const mainLink = await driver.findElements(By.xpath(
-    "//*[self::a or self::button][contains(translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),'ESAMS MAIN PAGE')]"
+    "//*[self::a or self::button][contains(translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),'SAFETYOPS MAIN PAGE')]"
   ));
   if (mainLink.length) {
     await mainLink[0].click();
     await driver.sleep(WAIT_AFTER_HOME_MS);
     return;
   }
-  const logos = await driver.findElements(By.xpath("//img[contains(@alt,'ESAMS Logo')]/ancestor::a[1]"));
+  const logos = await driver.findElements(By.xpath("//img[contains(@alt,'SafetyOps Logo')]/ancestor::a[1]"));
   if (logos.length) {
     await logos[0].click();
     await driver.sleep(WAIT_AFTER_HOME_MS);
@@ -76,12 +76,12 @@ export async function clickLogout(driver) {
           if (loginBits.length > 0) return true;
           const splashLogin = await driver.findElements(By.xpath(
             "//*[self::button or self::a or self::input[@type='submit']]" +
-            "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to esams')]"
+            "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to safetyops')]"
           ));
           if (splashLogin.length > 0) return true;
 
           try {
-            const authCookie = await driver.manage().getCookie('ESAMS.Authentication');
+            const authCookie = await driver.manage().getCookie('SafetyOps.Authentication');
             if (!authCookie) return true;
           } catch { return true; }
           return false;

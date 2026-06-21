@@ -142,7 +142,7 @@ async function loginAndSelectProfile(driver, username, password) {
   try {
     await driver.wait(
       until.elementLocated(By.xpath(
-        "//h1[contains(.,'ESAMS Main')] | //h2[contains(.,'ESAMS Main')] | " +
+        "//h1[contains(.,'SafetyOps Main')] | //h2[contains(.,'SafetyOps Main')] | " +
         "//nav//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or contains(.,'Application')]"
       )),
       4000
@@ -168,7 +168,7 @@ async function loginAndSelectProfile(driver, username, password) {
     try {
       await driver.wait(
         until.elementLocated(By.xpath(
-          "//h1[contains(.,'ESAMS Main')] | //h2[contains(.,'ESAMS Main')] | " +
+          "//h1[contains(.,'SafetyOps Main')] | //h2[contains(.,'SafetyOps Main')] | " +
           "//nav//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or contains(.,'Application')]"
         )),
         4000
@@ -189,7 +189,7 @@ async function loginAndSelectProfile(driver, username, password) {
 
   await driver.wait(
     until.elementLocated(By.xpath(
-      "//h1[contains(.,'ESAMS Main')] | //h2[contains(.,'ESAMS Main')] | " +
+      "//h1[contains(.,'SafetyOps Main')] | //h2[contains(.,'SafetyOps Main')] | " +
       "//nav//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or contains(.,'Application')]"
     )),
     10000

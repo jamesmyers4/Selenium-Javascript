@@ -220,16 +220,16 @@ function nowParts() {
 }
 
 function deriveRootFromEnv() {
-  const base = process.env.ESAMS_MAIN_URL || process.env.BASE_URL || '';
+  const base = process.env.SAFETYOPS_MAIN_URL || process.env.BASE_URL || '';
   if (!base) return '';
-  return base.replace(/\/(n\/esams\/main.*|auth\/account\/login.*|login.*)$/i, '');
+  return base.replace(/\/(n\/safetyops\/main.*|auth\/account\/login.*|login.*)$/i, '');
 }
 
 async function ensureOnFirMain(driver) {
   const url = (await driver.getCurrentUrl()) || '';
   if (/\/neris(?:\/|$)/i.test(url)) return;
 
-  const target = process.env.FIR_URL || (root ? `${root}/n/esams/neris` : '');
+  const target = process.env.FIR_URL || (root ? `${root}/n/safetyops/neris` : '');
 
   if (target) {
     try {

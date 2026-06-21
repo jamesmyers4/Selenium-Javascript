@@ -56,14 +56,14 @@ function normalize(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
 
 async function goHome(driver) {
   const mainLink = await driver.findElements(By.xpath(
-    "//*[self::a or self::button][contains(translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),'ESAMS MAIN PAGE')]"
+    "//*[self::a or self::button][contains(translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),'SAFETYOPS MAIN PAGE')]"
   ));
   if (mainLink.length) {
     await mainLink[0].click();
     await driver.sleep(WAIT_AFTER_HOME_MS);
     return;
   }
-  const logos = await driver.findElements(By.xpath("//img[contains(@alt,'ESAMS Logo')]/ancestor::a[1]"));
+  const logos = await driver.findElements(By.xpath("//img[contains(@alt,'SafetyOps Logo')]/ancestor::a[1]"));
   if (logos.length) {
     await logos[0].click();
     await driver.sleep(WAIT_AFTER_HOME_MS);

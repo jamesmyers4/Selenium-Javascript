@@ -8,14 +8,14 @@ export async function login(
     username     = process.env.LOGIN_USERNAME,
     password     = process.env.LOGIN_PASSWORD,
     baseUrl      = process.env.BASE_URL,
-    esamsMainUrl = process.env.ESAMS_MAIN_URL
+    safetyopsMainUrl = process.env.SAFETYOPS_MAIN_URL
   } = {}
 ) {
   if (!baseUrl) throw new Error('Set BASE_URL in .env.trashpanda');
   if (!username || !password) throw new Error('Set LOGIN_USERNAME / LOGIN_PASSWORD in .env.trashpanda');
 
-    if (!esamsMainUrl) {
-   const root = baseUrl.replace(/\/(auth\/account\/login|login)(\/.*)?$/i, '');    esamsMainUrl = `${root}/n/esams/main`;
+    if (!safetyopsMainUrl) {
+   const root = baseUrl.replace(/\/(auth\/account\/login|login)(\/.*)?$/i, '');    safetyopsMainUrl = `${root}/n/safetyops/main`;
   }
 
   await driver.manage().deleteAllCookies();
@@ -25,7 +25,7 @@ export async function login(
     const splash = await driver.wait(
       until.elementLocated(By.xpath(
         "//*[self::button or self::a or self::input[@type='submit']]" +
-        "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to esams')]"
+        "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to safetyops')]"
       )), 750
     );
     await driver.wait(until.elementIsEnabled(splash), 750);
@@ -83,16 +83,16 @@ export async function login(
   // OIDC hop or main
   await driver.wait(async () => {
     const u = (await driver.getCurrentUrl()) || '';
-    return /\/signin-oidc/i.test(u) || /\/n\/esams\/main/i.test(u);
+    return /\/signin-oidc/i.test(u) || /\/n\/safetyops\/main/i.test(u);
   }, 20000).catch(()=>{});
 
   // Ensure main
   try {
-    await driver.wait(until.urlMatches(/\/n\/esams\/main/i), 20000);
+    await driver.wait(until.urlMatches(/\/n\/safetyops\/main/i), 20000);
   } catch {
     try {
-      await driver.get(esamsMainUrl);
-      await driver.wait(until.urlMatches(/\/n\/esams\/main/i), 10000);
+      await driver.get(safetyopsMainUrl);
+      await driver.wait(until.urlMatches(/\/n\/safetyops\/main/i), 10000);
     } catch {
       await safeScreenshot(driver, 'stuck_on_auth.png');
       console.warn('❗ Could not reach main after login.');

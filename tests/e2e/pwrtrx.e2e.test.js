@@ -498,7 +498,7 @@ it("Populates Date, Time, then Address (modal-scoped) — safe against datepicke
       try { await driver.actions({ bridge: true }).sendKeys(Key.ESCAPE).perform(); } catch(e) {}
     });
 
-  it("navigates back to ESAMS Main + Log Out", async () => {
+  it("navigates back to SafetyOps Main + Log Out", async () => {
     await closeOverlays(driver);
     await withAlertGuard(driver, () => goHome(driver));
     const home = await driver.wait(

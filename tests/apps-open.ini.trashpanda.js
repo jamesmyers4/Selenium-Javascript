@@ -14,9 +14,9 @@ const PASSWORD = process.env.LOGIN_PASSWORD || '';
 if (!USERNAME || !PASSWORD) throw new Error('Set LOGIN_USERNAME / LOGIN_PASSWORD in .env.trashpanda');
 
 const BASE_URL = process.env.BASE_URL || '';
-const ESAMS_MAIN_URL =
-  process.env.ESAMS_MAIN_URL ||
-  (BASE_URL ? BASE_URL.replace(/\/auth\/Account\/Login.*$/i, '') + '/n/esams/main' : '');
+const SAFETYOPS_MAIN_URL =
+  process.env.SAFETYOPS_MAIN_URL ||
+  (BASE_URL ? BASE_URL.replace(/\/auth\/Account\/Login.*$/i, '') + '/n/safetyops/main' : '');
 
 if (!BASE_URL) throw new Error('Set BASE_URL in .env.trashpanda');
 
@@ -103,20 +103,20 @@ async function loginToTrashpanda(driver, username, password) {
   await driver.get(BASE_URL);
   await driver.sleep(250);
 
-  // 1) Click “Login to ESAMS” if present (splash)
+  // 1) Click “Login to SafetyOps” if present (splash)
   try {
-    const loginToEsamsBtn = await driver.wait(
+    const loginToSafetyOpsBtn = await driver.wait(
   until.elementLocated(By.xpath(
-    "//*[self::button or self::a or self::input[@type='submit']]" +
-    "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to esams')]"
+    “//*[self::button or self::a or self::input[@type='submit']]” +
+    “[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to safetyops')]”
   )),
   10000
 );
 
-    await driver.wait(until.elementIsVisible(loginToEsamsBtn), 2000);
-    await driver.wait(until.elementIsEnabled(loginToEsamsBtn), 2000);
-    await loginToEsamsBtn.click();
-    console.log("✅ Clicked 'Login to ESAMS'");
+    await driver.wait(until.elementIsVisible(loginToSafetyOpsBtn), 2000);
+    await driver.wait(until.elementIsEnabled(loginToSafetyOpsBtn), 2000);
+    await loginToSafetyOpsBtn.click();
+    console.log(“✅ Clicked 'Login to SafetyOps'”);
     await driver.sleep(400);
   } catch {
     // splash not present; continue
@@ -152,7 +152,7 @@ async function loginToTrashpanda(driver, username, password) {
     const hits = await driver.findElements(By.xpath(
       "//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or " +
       "     normalize-space()='MODULES'      or normalize-space()='Modules'] " +
-      "| //*[contains(.,'ESAMS Main')]"
+      "| //*[contains(.,'SafetyOps Main')]"
     ));
     return hits.length > 0;
   };
@@ -202,17 +202,17 @@ async function loginToTrashpanda(driver, username, password) {
 // Wait for the OIDC round-trip to complete: either we see /signin-oidc (postback) or land on main
 await driver.wait(async () => {
   const u = (await driver.getCurrentUrl()) || '';
-  return /\/signin-oidc/i.test(u) || /\/n\/esams\/main/i.test(u);
+  return /\/signin-oidc/i.test(u) || /\/n\/safetyops\/main/i.test(u);
 }, 20000).catch(() => { /* swallow; we’ll try a gentle nudge below */ });
 
 // If we saw the postback, the next hop should be main; wait for it
 try {
-  await driver.wait(until.urlMatches(/\/n\/esams\/main/i), 20000);
+  await driver.wait(until.urlMatches(/\/n\/safetyops\/main/i), 20000);
 } catch {
   // One gentle nudge to main if the chain stalled
   try {
-    await driver.get(ESAMS_MAIN_URL);
-    await driver.wait(until.urlMatches(/\/n\/esams\/main/i), 10000);
+    await driver.get(SAFETYOPS_MAIN_URL);
+    await driver.wait(until.urlMatches(/\/n\/safetyops\/main/i), 10000);
   } catch (e) {
     const url = await driver.getCurrentUrl();
     const title = await driver.getTitle().catch(()=> '');
@@ -237,14 +237,14 @@ try {
    ────────────────────────────────────────────── */
 async function goHome(driver) {
   const mainLink = await driver.findElements(By.xpath(
-    "//*[self::a or self::button][contains(translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),'ESAMS MAIN PAGE')]"
+    "//*[self::a or self::button][contains(translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),'SAFETYOPS MAIN PAGE')]"
   ));
   if (mainLink.length) {
     await mainLink[0].click();
     await driver.sleep(WAIT_AFTER_HOME_MS);
     return;
   }
-  const logos = await driver.findElements(By.xpath("//img[contains(@alt,'ESAMS Logo')]/ancestor::a[1]"));
+  const logos = await driver.findElements(By.xpath("//img[contains(@alt,'SafetyOps Logo')]/ancestor::a[1]"));
   if (logos.length) {
     await logos[0].click();
     await driver.sleep(WAIT_AFTER_HOME_MS);
@@ -465,16 +465,16 @@ async function clickLogout(driver) {
           );
           if (loginBits.length > 0) return true;
 
-          // "Login to ESAMS" splash
+          // "Login to SafetyOps" splash
           const splashLogin = await driver.findElements(By.xpath(
             "//*[self::button or self::a or self::input[@type='submit']]" +
-            "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to esams')]"
+            "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to safetyops')]"
           ));
           if (splashLogin.length > 0) return true;
 
           // 3) Cookie gone?
           try {
-            const authCookie = await driver.manage().getCookie('ESAMS.Authentication');
+            const authCookie = await driver.manage().getCookie('SafetyOps.Authentication');
             if (!authCookie) return true;
           } catch {
             // Some drivers throw if cookie missing; treat as success

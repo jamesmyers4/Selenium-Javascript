@@ -12,7 +12,7 @@ const num  = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
 
 export const cfg = Object.freeze({
   baseUrl: process.env.BASE_URL,
-  esamsMainUrl: process.env.ESAMS_MAIN_URL,
+  safetyopsMainUrl: process.env.SAFETYOPS_MAIN_URL,
   username: process.env.LOGIN_USERNAME,
   password: process.env.LOGIN_PASSWORD,
   headless: bool(process.env.HEADLESS),

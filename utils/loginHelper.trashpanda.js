@@ -13,9 +13,9 @@ dotenv.config({ path: path.resolve(process.cwd(), ENV_FILE) });
 
 // Make env-derived URLs available here (and export if needed)
 export const BASE_URL = process.env.BASE_URL || '';
-export const ESAMS_MAIN_URL =
-  process.env.ESAMS_MAIN_URL ||
-  (BASE_URL ? BASE_URL.replace(/\/(auth\/account\/login|login)(\/.*)?$/i, '') + '/n/esams/main' : '');
+export const SAFETYOPS_MAIN_URL =
+  process.env.SAFETYOPS_MAIN_URL ||
+  (BASE_URL ? BASE_URL.replace(/\/(auth\/account\/login|login)(\/.*)?$/i, '') + '/n/safetyops/main' : '');
 
 // ── Small utilities ──────────────────────────────────────────────────────────
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -136,7 +136,7 @@ export async function loginAndSelectProfile(
     username = process.env.LOGIN_USERNAME,
     password = process.env.LOGIN_PASSWORD,
     baseUrl  = BASE_URL,
-    esamsMainUrl = ESAMS_MAIN_URL
+    safetyopsMainUrl = SAFETYOPS_MAIN_URL
   } = {}
 ) {
   if (!baseUrl) throw new Error('BASE_URL missing (.env.trashpanda)');
@@ -146,15 +146,15 @@ export async function loginAndSelectProfile(
   await driver.manage().deleteAllCookies();
   await driver.get(baseUrl);
 
-  // Splash “Login to ESAMS” (optional)
+  // Splash “Login to SafetyOps” (optional)
   try {
     const splash = await driver.wait(until.elementLocated(By.xpath(
-      "//*[self::button or self::a or self::input[@type='submit']]" +
-      "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to esams')]"
+      “//*[self::button or self::a or self::input[@type='submit']]” +
+      “[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'login to safetyops')]”
     )), 6000);
     await driver.wait(until.elementIsVisible(splash), 3000);
     await splash.click();
-    console.log("✅ Clicked 'Login to ESAMS'");
+    console.log(“✅ Clicked 'Login to SafetyOps'”);
     await sleep(300);
   } catch { /* no splash */ }
 
@@ -202,17 +202,17 @@ export async function loginAndSelectProfile(
   // OIDC round-trip or direct land on main
   await driver.wait(async () => {
     const u = (await driver.getCurrentUrl()) || '';
-    return /\/signin-oidc/i.test(u) || /\/n\/esams\/main/i.test(u);
+    return /\/signin-oidc/i.test(u) || /\/n\/safetyops\/main/i.test(u);
   }, 20000).catch(() => {});
 
   // Nudge to main if we stalled mid-auth
   try {
-    await driver.wait(until.urlMatches(/\/n\/esams\/main/i), 20000);
+    await driver.wait(until.urlMatches(/\/n\/safetyops\/main/i), 20000);
   } catch {
-    if (esamsMainUrl) {
+    if (safetyopsMainUrl) {
       try {
-        await driver.get(esamsMainUrl);
-        await driver.wait(until.urlMatches(/\/n\/esams\/main/i), 10000);
+        await driver.get(safetyopsMainUrl);
+        await driver.wait(until.urlMatches(/\/n\/safetyops\/main/i), 10000);
       } catch {
         const title = await driver.getTitle().catch(() => '');
         console.warn('❗ Could not confirm main after login. URL:', await driver.getCurrentUrl(), 'Title:', title);
@@ -224,7 +224,7 @@ export async function loginAndSelectProfile(
   // If clearly on main already, stop here
   const onMain = await (async () => {
     const hits = await driver.findElements(By.xpath(
-      "//h1[contains(.,'ESAMS Main')] | //h2[contains(.,'ESAMS Main')] | " +
+      "//h1[contains(.,'SafetyOps Main')] | //h2[contains(.,'SafetyOps Main')] | " +
       "//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or " +
       "    normalize-space()='MODULES'      or normalize-space()='Modules']"
     ));
@@ -250,7 +250,7 @@ export async function loginAndSelectProfile(
   } catch (e) {
     // Maybe we landed on main without a profile card
     const mainNow = await driver.findElements(By.xpath(
-      "//h1[contains(.,'ESAMS Main')] | //h2[contains(.,'ESAMS Main')] | " +
+      "//h1[contains(.,'SafetyOps Main')] | //h2[contains(.,'SafetyOps Main')] | " +
       "//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or contains(.,'Application')]"
     ));
     if (!mainNow.length) {
@@ -266,7 +266,7 @@ export async function loginAndSelectProfile(
 
   // Final confirmation (non-blocking if already visible)
   await driver.wait(until.elementLocated(By.xpath(
-    "//h1[contains(.,'ESAMS Main')] | //h2[contains(.,'ESAMS Main')] | " +
+    "//h1[contains(.,'SafetyOps Main')] | //h2[contains(.,'SafetyOps Main')] | " +
     "//a[normalize-space()='APPLICATIONS' or normalize-space()='Applications' or contains(.,'Application')]"
   )), 10000);
   console.log("✅ Logged in and profile selected (or already on main).");
